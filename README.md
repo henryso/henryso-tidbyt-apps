@@ -38,7 +38,7 @@ file for more details.  Requires Pixlet 0.6.0.
 
 ## wordnik.star - Word Of the Day powered by Wordnik
 
-![wordnik.star sample](img/worknik.gif)
+![wordnik.star sample](img/wordnik.gif)
 
 Shows the word of the day according to [Wordnik](https://www.wordnik.com/word-of-the-day).
 Requires Pixlet 0.6.0.
