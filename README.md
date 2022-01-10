@@ -18,7 +18,7 @@ What modern device doesn't have some implementation of the "digital rain" from
 *The Matrix*.  My version employs symbols similar to the ones from the movie,
 redrawn to a lower resolution.  Some symbols (like the period, double quotes,
 and underscore) are omitted because they cause odd-looking gaps when not fully
-visible.  The algorithm is based on a pseudo-random number generated and will
+visible.  The algorithm is based on a pseudo-random number generator and will
 generate a new sequence every thirty minutes.
 
 ## they_said_so.star - Quote Of the Day powered by theysaidso.com
