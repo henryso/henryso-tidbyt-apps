@@ -21,13 +21,6 @@ and underscore) are omitted because they cause odd-looking gaps when not fully
 visible.  The algorithm is based on a pseudo-random number generated and will
 generate a new sequence every thirty minutes.
 
-## they_said_so_bible.star - Bible Verse Of the Day powered by theysaidso.com
-
-![they_said_so_bible.star sample](img/they_said_so_bible.gif)
-
-Shows the Bible verse of the day according to [theysaidso.com](https://theysaido.com).
-Requires Pixlet 0.6.0.
-
 ## they_said_so.star - Quote Of the Day powered by theysaidso.com
 
 ![they_said_so.star sample](img/they_said_so.gif)
@@ -35,6 +28,13 @@ Requires Pixlet 0.6.0.
 Shows the quote of the day according to [theysaidso.com](https://theysaido.com).
 Different categories are available and may be selected by parameter.  See the
 file for more details.  Requires Pixlet 0.6.0.
+
+## they_said_so_bible.star - Bible Verse Of the Day powered by theysaidso.com
+
+![they_said_so_bible.star sample](img/they_said_so_bible.gif)
+
+Shows the Bible verse of the day according to [theysaidso.com](https://theysaido.com).
+Requires Pixlet 0.6.0.
 
 ## wordnik.star - Word Of the Day powered by Wordnik
 
