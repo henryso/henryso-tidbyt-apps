@@ -30,30 +30,28 @@ load('encoding/json.star', 'json')
 
 URL = 'https://api.wordnik.com/v4/words.json/wordOfTheDay?api_key='
 
+WIDTH = 64
+LONG_WORD = 14
+
 WORD_COLOR = '#fff'
 LINE_COLOR = '#008'
+SEPARATOR_COLOR = '#005'
 PART_COLOR = '#468'
 TEXT_COLOR = '#89b'
 
 KEY = 'wod'
 TTL = 60 * 60
 
+FONTS = {
+    True: ( "tb-8", 8 ),
+    False: ( "tom-thumb", 6 )
+}
+
 # takes 'static' for a static definition and 'api_key' to retrieve a word
 def main(config):
-    if config.get('static'):
-        content = {
-            'word': 'incipience',
-            'defs': [
-                {
-                    'text': 'The condition of being incipient; beginning; commencement.',
-                    'part': 'noun',
-                },
-                {
-                    'text': 'A beginning, or first stage',
-                    'part': 'noun',
-                },
-            ],
-        }
+    static = config.get('static')
+    if static != None:
+        content = STATIC_CONTENT[int(static) % len(STATIC_CONTENT)]
     else:
         content = cache.get(KEY)
         if content == None:
@@ -102,49 +100,72 @@ def main(config):
 
     word = content['word']
     definitions = content['defs']
+    word_font = FONTS[len(word) < LONG_WORD]
+    definition_font = FONTS[len(definitions) < 4 and all([
+        all([
+            len(w) < LONG_WORD
+            for w in d['text'].split()
+        ])
+        for d in definitions
+    ])][0]
 
     return render.Root(
         delay = 100 if len(definitions) < 3 else 50,
-        child = render.Marquee(
-            height = 32,
-            offset_start = 16,
-            offset_end = 16,
-            scroll_direction = 'vertical',
-            child = render.Column(flatten([
+        child = render.Column([
+            render.Stack([
+                render.Column([
+                    render.Box(
+                        width = WIDTH,
+                        height = word_font[1] - 1,
+                    ),
+                    render.Box(
+                        width = WIDTH,
+                        height = 1,
+                        color = LINE_COLOR,
+                    ),
+                ]),
                 render.Text(
                     color = WORD_COLOR,
-                    font = 'tb-8' if len(word) < 14 else 'tom-thumb',
+                    font = word_font[0],
                     content = word,
                 ),
-                [
+            ]),
+            render.Marquee(
+                height = 32 - word_font[1],
+                offset_start = 16,
+                offset_end = 16,
+                scroll_direction = 'vertical',
+                child = render.Column(flatten([
                     (
                         render.Box(
-                            width = 64,
+                            width = WIDTH,
                             height = 1,
-                            color = LINE_COLOR,
-                        ),
-                        render_definition(d),
-                    ) for d in definitions
-                ]
-            ])),
-        )
+                            color = SEPARATOR_COLOR,
+                        ) if d[0] != 0 else tuple(),
+                        render_definition(d[1], definition_font),
+                    ) for d in enumerate(definitions)
+                ])),
+            ),
+        ]),
     )
 
 # Returns the widget for a given definition
 # definition - the definition
-def render_definition(definition):
+def render_definition(definition, font):
     part = definition['part'] # #58a
     part = '%s,' % PARTS.get(part, part)
     text = definition['text']
     return render.Stack([
         render.WrappedText(
-            width = 64,
+            width = WIDTH,
             color = TEXT_COLOR,
             content = '%s %s' % (part, text),
+            font = font,
         ),
         render.Text(
             color = PART_COLOR,
             content = part,
+            font = font,
         ),
     ])
 
@@ -186,3 +207,36 @@ PARTS = {
     'verb-intransitive':        'v.',
     'verb-transitive':          'v.',
 }
+
+STATIC_CONTENT = [
+    {
+        'word': 'incipience',
+        'defs': [
+            {
+                'text': 'The condition of being incipient; beginning; commencement.',
+                'part': 'noun',
+            },
+            {
+                'text': 'A beginning, or first stage',
+                'part': 'noun',
+            },
+        ],
+    },
+    {
+        'word': 'heterochromatic',
+        'defs': [
+            {
+                'text': 'Of or characterized by different colors; varicolored.',
+                'part': 'adjective',
+            },
+            {
+                'text': 'Consisting of different wavelengths or frequencies.',
+                'part': 'adjective',
+            },
+            {
+                'text': 'Of or relating to heterochromatin.',
+                'part': 'adjective',
+            },
+        ],
+    }
+]
