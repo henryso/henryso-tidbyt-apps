@@ -1,3 +1,10 @@
+"""
+Applet: They Said So
+Summary: Quote of the Day
+Description: Quote of the day powered by theysaidso.com.
+Author: Henry So, Jr.
+"""
+
 # Quote Of the Day powered by theysaidso.com
 #
 # Copyright (c) 2022 Henry So, Jr.
@@ -28,7 +35,7 @@ load('cache.star', 'cache')
 load('encoding/base64.star', 'base64')
 load('encoding/json.star', 'json')
 
-URL = 'https://quotes.rest/qod.json?category='
+URL = 'http://quotes.rest/qod.json?category='
 
 WIDTH = 64
 HEIGHT = 32
@@ -61,29 +68,31 @@ CATEGORIES = [
 
 # Takes category (value from CATEGORIES)
 def main(config):
-    category = config.get('category') or 'inspire'
+    category = config.get('category') or 'fake'
 
     if category in CATEGORIES:
         key = 'qod:' + category
         content = cache.get(key)
         if content == None:
-            print("retrieving " + category)
+            #print("retrieving " + category)
             content = http.get(URL + category)
             if content.status_code == 200:
-                content = content.json()['contents']['quotes'][0]
+                content = content.json().get('contents', {}).get('quotes')
+                # None and empty list are both falsy
+                content = content[0] if content else {}
                 content = {
-                    'quote': content['quote'],
-                    'author': content['author'],
+                    'quote': content.get('quote'),
+                    'author': content.get('author'),
                 }
                 cache.set(key, json.encode(content), TTL)
             else:
-                print('Server returned %s' % content.status_code)
+                #print('Server returned %s' % content.status_code)
                 content = {
                     'quote': 'Forsooth, the server quoteth "%s".' % content.status_code,
                     'author': 'Anonymous',
                 }
         else:
-            print("using cache for " + category)
+            #print("using cache for " + category)
             content = json.decode(content)
     else:
         content = {
@@ -91,8 +100,8 @@ def main(config):
             'author': 'Anonymous',
         }
 
-    quote = content['quote']
-    author = content['author']
+    quote = content.get('quote') or "Strange, the API didn't return a quote."
+    author = content.get('author') or 'Author Unknown'
 
     # try to adjust when the quote is too long
     delay = 100
@@ -160,6 +169,23 @@ def main(config):
             ]),
         )
     )
+
+def get_schema():
+    categories = [
+        { 'text': category, 'value': category }
+        for category in CATEGORIES
+    ]
+    return [
+        {
+            'type': 'dropdown',
+            'id': 'category',
+            'name': 'Category',
+            'icon': 'quoteRight',
+            'description': 'The quote category to select from.',
+            'options': categories,
+            'default': 'inspire',
+        },
+    ]
 
 LQUOTE = base64.decode("""
 iVBORw0KGgoAAAANSUhEUgAAABYAAAATAgMAAADpFxUbAAAACVBMVEUAAAAAAAD///+D3c/SAAAA
