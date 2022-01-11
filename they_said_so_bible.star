@@ -28,7 +28,7 @@ load('cache.star', 'cache')
 load('encoding/base64.star', 'base64')
 load('encoding/json.star', 'json')
 
-URL = 'https://quotes.rest/bible/vod.json'
+URL = 'http://quotes.rest/bible/vod.json'
 
 SCROLL_W = 64
 TOP_H = 6
