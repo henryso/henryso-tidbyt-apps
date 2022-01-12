@@ -40,5 +40,12 @@ Requires Pixlet 0.6.0.
 
 [![wordnik.star sample](img/wordnik.gif)](wordnik.star)
 
-Shows the word of the day according to [Wordnik](https://www.wordnik.com/word-of-the-day).
-Requires Pixlet 0.6.0.
+Shows the [Wordnik Word of the Day](https://www.wordnik.com/word-of-the-day).
+Requires Pixlet 0.6.0.  You'll also need to get an API key which you must pass
+to the application as an `api_key` parameter.
+
+The Wordnik logo in the background is used with permission.
+
+I have been asked to provide links to [Wordnik](https://wordnik.com)
+as well as the [Wordnik Developer Portal](https://developer.wordnik.com), where
+you can go to get an API key and learn about their API.
