@@ -40,7 +40,7 @@ WIDTH = 64
 HEIGHT = 32
 LOGO_PAD = (0, HEIGHT - 14, 0, 0)
 
-LONG_WORD = 14
+LONG_WORD = 13
 
 WORD_COLOR = "#fff"
 LINE_COLOR = "#008"
@@ -107,6 +107,8 @@ def main(config):
         else:
             print("using cache for word")
             content = json.decode(content)
+
+    print(content)
 
     word = content["word"]
     definitions = content["defs"]
