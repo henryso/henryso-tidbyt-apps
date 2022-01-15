@@ -10,6 +10,15 @@ The official clock app is too small for my liking, so I created this one with
 larger numbers.  It also shows the current date below.  Colors are configurable
 via parameters.  See the file for more details.
 
+## day_night_map.star - Day & Night World Map
+
+[![day_night_map.star sample](img/day_night_map.gif)](day_night_map.star)
+
+Displays the world map shaded to show day and night.  It can optionally show a
+time and/or date overlay.  The map image is a down-scaled version of
+[Equirectangular (0°) by Tobias Jung](https://map-projections.net/single-view/rectang-0:flat-stf)
+and is released, as required, under [CC-BY-SA](https://creativecommons.org/licenses/by-sa/4.0/).
+
 ## digital_rain.star - Digital Rain à la The Matrix
 
 [![digital_rain.star sample](img/digital_rain.gif)](digital_rain.star)
