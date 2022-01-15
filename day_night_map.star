@@ -347,7 +347,7 @@ AAAASUVORK5CYII=
 # The following Base64-encoded image is a scaled-down version of
 # Equirectangular (0°) by Tobias Jung
 # found at https://map-projections.net/single-view/rectang-0:flat-stf
-# This image released under the CC-BY-SA 4.0 International license
+# This image released under the CC BY-SA 4.0 International license
 MAP = base64.decode("""
 iVBORw0KGgoAAAANSUhEUgAAAEAAAAAgCAMAAACVQ462AAADAFBMVEUVbb4Wcbsua7ETc7crbasg
 ca8ncbYkc7E7dUomdLMvc6wndbQycrIjd686c48+cpQpd6kpdrVAdH4qd7Y8c60ueaUzd7A8eXky
