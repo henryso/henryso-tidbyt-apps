@@ -17,7 +17,7 @@ via parameters.  See the file for more details.
 Displays the world map shaded to show day and night.  It can optionally show a
 time and/or date overlay.  The map image is a down-scaled version of
 [Equirectangular (0°) by Tobias Jung](https://map-projections.net/single-view/rectang-0:flat-stf)
-and is released, as required, under [CC-BY-SA](https://creativecommons.org/licenses/by-sa/4.0/).
+and is released, as required, under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 
 ## digital_rain.star - Digital Rain à la The Matrix
 
