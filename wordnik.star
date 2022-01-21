@@ -41,6 +41,8 @@ HEIGHT = 32
 LOGO_PAD = (0, HEIGHT - 14, 0, 0)
 
 LONG_WORD = 13
+LONG_DEFINITION = 25
+FAST_DEFINITION = 50
 
 WORD_COLOR = "#fff"
 LINE_COLOR = "#008"
@@ -113,13 +115,20 @@ def main(config):
     word = content["word"]
     definitions = content["defs"]
     word_font = FONTS[len(word) < LONG_WORD]
-    definition_font = FONTS[len(definitions) < 4 and all([
-        all([
-            len(w) < LONG_WORD
-            for w in d["text"].split()
-        ])
-        for d in definitions
-    ])][0]
+    longest_definition_word_length = 0
+    definition_word_count = 0
+    for d in definitions:
+        for w in d["text"].split():
+            definition_word_count += 1
+            length = len(list(w.codepoints()))
+            if longest_definition_word_length < length:
+                longest_definition_word_length = length
+    definition_font_is_large = (
+        longest_definition_word_length < LONG_WORD and
+        definition_word_count < LONG_DEFINITION
+    )
+    definition_font = FONTS[definition_font_is_large][0]
+    delay = 100 if definition_word_count < FAST_DEFINITION else 50
 
     display = render.Column([
         render.Stack([
@@ -159,7 +168,7 @@ def main(config):
     ])
 
     return render.Root(
-        delay = 100 if len(definitions) < 3 else 50,
+        delay = delay,
         child = display if config.get("hide_logo") else render.Stack([
             render.Padding(
                 pad = LOGO_PAD,
