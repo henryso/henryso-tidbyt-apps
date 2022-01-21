@@ -27,10 +27,11 @@ Author: Henry So, Jr.
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# Note: this app is subject to theysaidso.com's public, rate-limited API
+# Note: this app uses theysaidso.com's public RSS feed (via feedburner)
 
 load("http.star", "http")
 load("render.star", "render")
+load("schema.star", "schema")
 load("cache.star", "cache")
 load("xpath.star", "xpath")
 load("encoding/base64.star", "base64")
@@ -82,8 +83,8 @@ def main(config):
                 xml = xpath.loads(content.body())
                 data = {
                     c: {
-                        "quote": xml.query("//item[ends-with(link,'#"+c+"')]/quote"),
-                        "author": xml.query("//item[ends-with(link,'#"+c+"')]/author"),
+                        "quote": xml.query("//item[ends-with(link,'#" + c + "')]/quote"),
+                        "author": xml.query("//item[ends-with(link,'#" + c + "')]/author"),
                     }
                     for c in CATEGORIES
                 }
@@ -176,20 +177,22 @@ def main(config):
 
 def get_schema():
     categories = [
-        {"text": category, "value": category}
+        schema.Option(display = category, value = category)
         for category in CATEGORIES
     ]
-    return [
-        {
-            "type": "dropdown",
-            "id": "category",
-            "name": "Category",
-            "icon": "quoteRight",
-            "description": "The quote category to select from.",
-            "options": categories,
-            "default": "inspire",
-        },
-    ]
+    return schema.Schema(
+        version = "1",
+        fields = [
+            schema.Dropdown(
+                id = "category",
+                name = "Category",
+                icon = "quoteRight",
+                desc = "The quote category to select from.",
+                options = categories,
+                default = "inspire",
+            ),
+        ],
+    )
 
 LQUOTE = base64.decode("""
 iVBORw0KGgoAAAANSUhEUgAAABYAAAATAgMAAADpFxUbAAAACVBMVEUAAAAAAAD///+D3c/SAAAA
