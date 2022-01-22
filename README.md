@@ -6,8 +6,8 @@ All the apps here are licensed under the MIT license
 
 [![bgg_hotness.star sample](img/bgg_hotness.gif)](bgg_hotness.star)
 
-Displays the top four items from BoardGameGeek's Hotness list.  The sample
-above shows the data retrieved from BoardGameGeek on 21 January 2022.
+Displays the top five items from BoardGameGeek's Hotness list.  The sample
+above shows the data retrieved from BoardGameGeek on 22 January 2022.
 
 ## date_and_time.star - Big-Number Clock With Date
 

@@ -1,7 +1,7 @@
 """
 Applet: BGG Hotness
-Summary: Board Game Hotness powered by BoardGameGeek
-Description: Shows the top items from BoardGameGeek's Board Game Hotness list
+Summary: BoardGameGeek Hotness
+Description: Shows the top items from BoardGameGeek's Board Game Hotness list.
 Author: Henry So, Jr.
 """
 
@@ -45,6 +45,7 @@ def main():
 
     data = cache.get(KEY)
     data = json.decode(data) if data else None
+
     if not data or (now - data["timestamp"]) > EXPIRY:
         print("Getting " + URL)
         content = http.get(URL)
@@ -69,7 +70,7 @@ def main():
                 d["image_url"]: d["image"]
                 for d in data["list"]
                 if "image_url" in d and "image" in d
-            } if data else { }
+            } if data else {}
 
             for c in content["list"]:
                 image_url = c["image_url"]
@@ -80,6 +81,7 @@ def main():
             data = content
 
             cache.set(KEY, json.encode(data), TTL)
+            #print(json.encode(data))
 
     if not data:
         # dummy data
@@ -90,7 +92,7 @@ def main():
                     "name": "Failed to retrieve the BoardGameGeek hotness",
                 }
                 for rank in RANKS
-            ]
+            ],
         }
 
     hotness = data["list"]
@@ -100,18 +102,16 @@ def main():
         if image:
             h["image"] = base64.decode(image)
 
-    hotness = [
-        render_data(i, h)
-        for i, h in enumerate(hotness)
-    ]
+    hotness = [data_frame(i, h) for i, h in enumerate(hotness)]
+
+    frames = []
+    for i, h in enumerate(hotness):
+        frames.extend([h] * PAUSE_F)
+        frames.extend(scroll_frames(h, hotness[(i + 1) % COUNT]))
 
     return render.Root(
-        delay = 30,
-        child = render.Animation([
-            render_frame(h, hotness[(i + 1) % NUM_ITEMS], f)
-            for i, h in enumerate(hotness)
-            for f in range(ITEM_F)
-        ]),
+        delay = DELAY_MS,
+        child = render.Animation(frames),
     )
 
 def get_schema():
@@ -129,7 +129,7 @@ def get_image(url):
 
     return None
 
-def render_data(i, item):
+def data_frame(i, item):
     name = item.get("name", "")
     black_text = render.WrappedText(
         color = "#000",
@@ -160,22 +160,25 @@ def render_data(i, item):
         ] + [
             render.WrappedText(
                 color = COLORS[i],
-                content = name
+                content = name,
             ),
         ],
     )
 
-def render_frame(item, next_item, f):
-    return render.Padding(
-        pad = (0, 0 if f < PAUSE_F else 2 * (PAUSE_F - f - 1), 0, 0),
-        child = render.Stack([
-            item,
-            render.Padding(
-                pad = (0, HEIGHT, 0, 0),
-                child = next_item,
-            ) if f >= PAUSE_F else None,
-        ]),
-    )
+def scroll_frames(item, next_item):
+    return [
+        render.Padding(
+            pad = (0, offset, 0, 0),
+            child = render.Stack([
+                item,
+                render.Padding(
+                    pad = (0, HEIGHT, 0, 0),
+                    child = next_item,
+                ),
+            ]),
+        )
+        for offset in range(SCROLL_SIZE, SCROLL_LIMIT, SCROLL_SIZE)
+    ]
 
 URL = "http://boardgamegeek.com/xmlapi2/hot?type=boardgame"
 
@@ -183,20 +186,22 @@ NAME_PATH_FMT = "/items/item[@rank=%s]/name/@value"
 YEAR_PATH_FMT = "/items/item[@rank=%s]/yearpublished/@value"
 IMAGE_PATH_FMT = "/items/item[@rank=%s]/thumbnail/@value"
 
-WIDTH = 64 
+WIDTH = 64
 HEIGHT = 32
 
 IM_W = 32
 IM_H = 32
 IM_H_PAD = 32
 
-NUM_ITEMS = 4
+COUNT = 5
 
-PAUSE_F = 67
-SCROLL_F = 16
-ITEM_F = PAUSE_F + SCROLL_F
+DELAY_MS = 30
+PAUSE_MS = 2000
+PAUSE_F = PAUSE_MS // DELAY_MS
+SCROLL_SIZE = -4
+SCROLL_LIMIT = -HEIGHT - 1
 
-RANKS = range(1, NUM_ITEMS + 1)
+RANKS = range(1, COUNT + 1)
 
 SHADOW_PADDING = [
     (x, y, 0, 0)
@@ -209,9 +214,10 @@ COLORS = [
     "#f44",
     "#bb0",
     "#3d3",
+    "#3df",
     "#26f",
 ]
 
 KEY = "hotness"
 TTL = 48 * 60 * 60
-EXPIRY = 1 * 60 * 60
+EXPIRY = 3 * 60 * 60
