@@ -194,7 +194,7 @@ def get_schema():
                 id = "center_location",
                 name = "Center On Location",
                 desc = "Whether to center the map on the location.",
-                icon = "",
+                icon = "compressArrowsAlt",
                 default = False,
             ),
             schema.Dropdown(
