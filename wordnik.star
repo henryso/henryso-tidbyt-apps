@@ -118,6 +118,7 @@ def main(config):
     longest_definition_word_length = 0
     definition_word_count = 0
     for d in definitions:
+        definition_word_count += 1 # for the part of speech
         for w in d["text"].split():
             definition_word_count += 1
             length = len(list(w.codepoints()))
@@ -235,6 +236,7 @@ PARTS = {
     "suffix":                   "suf.",
     "verb-intransitive":        "v.",
     "verb-transitive":          "v.",
+    "transitive verb":          "v.",
 }
 
 STATIC_CONTENT = [
